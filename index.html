@@ -49,7 +49,17 @@
 	</div>
 
 	<div class="row">
-		<div class="col-md-6">
+		<div class="form-group col-md-6">
+			<label for="sigmaPreset">Verteilungsform</label>
+			<select id="sigmaPreset" class="form-control">
+				<option value="sehr steil">Sehr steil</option>
+				<option value="steil">Steil</option>
+				<option value="normal" selected>Normal</option>
+				<option value="flach">Flach</option>
+				<option value="sehr flach">Sehr flach</option>
+			</select>
+		</div>
+		<div class="col-md-6 d-flex align-items-center">
 			<div class="form-check form-switch">
 				<input class="form-check-input" type="checkbox" role="switch" id="minOne" checked>
 				<label class="form-check-label">Jede Zelle mindestens 1</label>

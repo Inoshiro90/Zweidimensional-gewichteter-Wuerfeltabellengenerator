@@ -1,12 +1,36 @@
 function generate() {
+	const preset = document.getElementById('sigmaPreset').value;
 	const xS = parseScale('scaleX');
 	const yS = parseScale('scaleY');
 	const size = 100;
 	const minOne = (minOneCheckbox = document.getElementById('minOne').checked);
 	const mx = Number(meanX.value),
 		my = Number(meanY.value);
-	const sx = xS.length / 4,
-		sy = yS.length / 4;
+
+	let sigmaFactor;
+
+	switch (preset) {
+		case 'sehr steil':
+			sigmaFactor = 10;
+			break;
+		case 'steil':
+			sigmaFactor = 8;
+			break;
+		case 'flach':
+			sigmaFactor = 4;
+			break;
+		case 'sehr flach':
+			sigmaFactor = 2;
+			break;
+		case 'normal':
+		default:
+			sigmaFactor = 6;
+	}
+
+	console.log('Sigma Factor:', preset, sigmaFactor);
+
+	const sx = xS.length / sigmaFactor;
+	const sy = yS.length / sigmaFactor;
 
 	let weights = [],
 		values = [];
