@@ -181,7 +181,15 @@ function generate() {
 
 	// Tabellenköpfe
 	let header = '<tr><th></th>' + xS.map((v) => `<th>${v}</th>`).join('') + '</tr>';
-
+	let flatTableHTML =
+		'<tr>' +
+		'<th>Kategorie X</th>' +
+		'<th>Kategorie Y</th>' +
+		'<th>Von</th>' +
+		'<th>Bis</th>' +
+		'<th>Slots</th>' +
+		'<th>Prozent</th>' +
+		'</tr>';
 	let rangeTableHTML = header;
 	let slotTableHTML = header;
 	let percentTableHTML = header;
@@ -219,7 +227,23 @@ function generate() {
 			rangeTableHTML += `<td>${label}</td>`;
 			slotTableHTML += `<td>${slots}</td>`;
 			percentTableHTML += `<td>${percent.toFixed(2).replace('.', ',')}</td>`;
+			let fromVal = null;
+			let toVal = null;
 
+			if (slots > 0) {
+				fromVal = current - slots;
+				toVal = current - 1;
+			}
+
+			flatTableHTML +=
+				'<tr>' +
+				`<td>${xS[x]}</td>` +
+				`<td>${yS[y]}</td>` +
+				`<td>${fromVal ?? ''}</td>` +
+				`<td>${toVal ?? ''}</td>` +
+				`<td>${slots}</td>` +
+				`<td>${percent.toFixed(2).replace('.', ',')}</td>` +
+				'</tr>';
 			idx++;
 		}
 
@@ -242,6 +266,33 @@ function generate() {
 	rangeTable.innerHTML = `<table class="table table-bordered">${rangeTableHTML}</table>`;
 	slotTable.innerHTML = `<table class="table table-bordered">${slotTableHTML}</table>`;
 	percentTable.innerHTML = `<table class="table table-bordered">${percentTableHTML}</table>`;
+	flatTable.innerHTML = `<table class="table table-bordered">${flatTableHTML}</table>`;
 
 	jsonOutput.value = JSON.stringify(json, null, 2);
+}
+
+function copyTableToClipboard(tableContainerId) {
+	const container = document.getElementById(tableContainerId);
+	if (!container) return;
+
+	const table = container.querySelector('table');
+	if (!table) return;
+
+	let text = '';
+
+	for (const row of table.rows) {
+		const cells = Array.from(row.cells).map((cell) =>
+			cell.innerText.replace(/\s+/g, ' ').trim(),
+		);
+		text += cells.join('\t') + '\n';
+	}
+
+	navigator.clipboard.writeText(text);
+}
+
+function copyJSONToClipboard(textareaId) {
+	const textarea = document.getElementById(textareaId);
+	if (!textarea) return;
+
+	navigator.clipboard.writeText(textarea.value);
 }
